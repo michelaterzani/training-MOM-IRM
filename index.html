@@ -19,124 +19,108 @@
   <script src="plugins/plugin-fullscreen.js"></script>
 
   <style>
-    :root {
-      --movieBG: #549FFF;
-    }
+  :root {
+    --movieBG: #549FFF;
+  }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: var(--movieBG);
-    }
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: var(--movieBG);
+  }
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+  body {
+    font-family: Arial, sans-serif;
+  }
 
-    #jspsych-content {
-      width: 100vw;
-      height: 100vh;
-      position: relative !important;
-      background: var(--movieBG);
-      margin: 0 !important;
-      padding: 0 !important;
-      overflow: hidden;
-    }
+  body.jspsych-display-element {
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: var(--movieBG);
+  }
 
-    .jspsych-content-wrapper {
-      width: 100%;
-      height: 100%;
-}
+  #jspsych-content {
+    width: 100%;
+    height: 100%;
+    position: relative !important;
+    background: var(--movieBG);
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
 
-    .jspsych-display-element {
-      width: 100vw;
-      height: 100vh;
-      min-height: 100vh;
-      margin: 0 !important;
-      padding: 0 !important;
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      background: var(--movieBG);
-    }
+  .jspsych-content-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
 
-    .jspsych-content {
-      width: 100%;
-      height: 100%;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-      align-items: center !important;
-      text-align: center;
-    }
+  .jspsych-content {
+    width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
 
-    .jspsych-btn {
-      display: block !important;
-      margin: 20px auto 0 auto !important;
-      text-align: center;
-    }
+  .jspsych-btn {
+    display: block !important;
+    margin: 20px auto 0 auto !important;
+    text-align: center;
+  }
 
-    .mmo-debug-label {
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.9);
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 18px;
-      z-index: 9999;
-      pointer-events: none;
-    }
+  .mmo-form {
+    box-sizing: border-box;
+    width: min(90vw, 640px);
+    text-align: center;
+    background: rgba(255,255,255,0.85);
+    padding: 22px 26px;
+    border-radius: 16px;
+    margin: 0 auto;
+  }
 
-    .mmo-fixation {
-      font-size: 96px;
-      font-weight: 800;
-      line-height: 1;
-      color: #000;
-    }
+  .mmo-form h1 {
+    margin: 0 0 6px 0;
+    font-size: clamp(28px, 4vw, 48px);
+  }
 
-    .mmo-form {
-      box-sizing: border-box;
-      width: min(90vw, 640px);
-      text-align: center;
-      background: rgba(255,255,255,0.85);
-      padding: 22px 26px;
-      border-radius: 16px;
-      margin: 0 auto;
-    }
+  .mmo-form p {
+    margin: 10px 0;
+    font-size: clamp(18px, 2.2vw, 30px);
+  }
 
-    .mmo-form h1 {
-      margin: 0 0 6px 0;
-      font-size: clamp(28px, 4vw, 48px);
-    }
+  .mmo-form input {
+    font-size: clamp(18px, 2vw, 24px);
+    padding: 8px 12px;
+    width: min(300px, 70vw);
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.25);
+    outline: none;
+    box-sizing: border-box;
+  }
 
-    .mmo-form p {
-      margin: 10px 0;
-      font-size: clamp(18px, 2.2vw, 30px);
-    }
-
-    .mmo-form input {
-      font-size: clamp(18px, 2vw, 24px);
-      padding: 8px 12px;
-      width: min(300px, 70vw);
-      text-align: center;
-      border-radius: 10px;
-      border: 1px solid rgba(0,0,0,0.25);
-      outline: none;
-      box-sizing: border-box;
-    }
-
-    .mmo-hint {
-      margin-top: 18px;
-      font-weight: 700;
-      font-size: clamp(16px, 1.8vw, 22px);
-    }
-  </style>
+  .mmo-hint {
+    margin-top: 18px;
+    font-weight: 700;
+    font-size: clamp(16px, 1.8vw, 22px);
+  }
+</style>
 </head>
 
 <body>
