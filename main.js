@@ -1,12 +1,4 @@
-//  <!-- MOM-IRM Training
-
-// Bisogna sistemare la cartella: mancano i plugin ecc, vedi nella pagina github
-
-// Structure:
-// 1) Messaggio introduttivo per guardare la spiegazione
-// 2) Spiegazione del task
-// 3) Premi per fare un êntrainement.
-// 4) Introduzione al training.
+// MOM-IRM Training
 
 console.log("jsPsychHtmlKeyboardResponse:", typeof jsPsychHtmlKeyboardResponse);
 console.log("jsPsychVideoAudioKeyboardResponse:", typeof jsPsychVideoAudioKeyboardResponse);
@@ -19,9 +11,42 @@ const jsPsych = initJsPsych({
 
 const timeline = [];
 
-// Richiesta dell'età.
+// ---------- Helpers grafici responsive ----------
+const MMO_SCREEN_BG = "#549FFF";
 
-let MMO_ageStr = ""; 
+function fullscreenVideoHTML(id, src) {
+  return `
+    <div style="
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: ${MMO_SCREEN_BG};
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    ">
+      <video
+        id="${id}"
+        style="
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          display: block;
+        "
+        playsinline
+      >
+        <source src="${src}" type="video/mp4">
+      </video>
+    </div>
+  `;
+}
+
+// ---------- Richiesta età ----------
+let MMO_ageStr = "";
 
 const ask_age = {
   type: jsPsychHtmlKeyboardResponse,
@@ -57,10 +82,11 @@ const ask_age = {
     window.MMO_SUBJECT_AGE = age;
     jsPsych.data.addProperties({ subject_age: age });
   },
-}
+};
 
 timeline.push(ask_age);
 
+// ---------- Intro ----------
 const intro_screen = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
@@ -71,7 +97,7 @@ const intro_screen = {
   choices: [" "]
 };
 
-// Fullscreen
+// ---------- Fullscreen ----------
 timeline.push({
   type: jsPsychFullscreen,
   fullscreen_mode: true,
@@ -83,29 +109,12 @@ timeline.push({
   button_label: "Continuer"
 });
 
-
 timeline.push(intro_screen);
 
-// Video di spiegazione.
-
+// ---------- Vidéo explication ----------
 const explanation_trial = {
   type: jsPsychHtmlKeyboardResponse,
-
-  stimulus: `
-    <div style="
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #549FFF;
-    ">
-      <video id="explication-video" style="max-width: 100vw; max-height: 100vh;">
-        <source src="video/CompleteExplication.mp4" type="video/mp4">
-      </video>
-    </div>
-  `,
-
+  stimulus: fullscreenVideoHTML("explication-video", "video/CompleteExplication.mp4"),
   choices: "NO_KEYS",
 
   on_load: function() {
@@ -113,7 +122,6 @@ const explanation_trial = {
     const audio = new Audio("audio/CompleteExplication_IRM.wav");
 
     video.loop = true;
-
     video.play();
     audio.play();
 
@@ -126,8 +134,7 @@ const explanation_trial = {
 
 timeline.push(explanation_trial);
 
-// Continua per fare un training.
-
+// ---------- Avant training ----------
 const before_training = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
@@ -140,26 +147,10 @@ const before_training = {
 
 timeline.push(before_training);
 
-// Video di introduzione al training.
-
+// ---------- Intro training ----------
 const training_introduction = {
   type: jsPsychHtmlKeyboardResponse,
-
-  stimulus: `
-    <div style="
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #549FFF;
-    ">
-      <video id="training-introduction-video" style="max-width: 100vw; max-height: 100vh;">
-        <source src="video/RobotQuiParle_loop.mp4" type="video/mp4">
-      </video>
-    </div>
-  `,
-
+  stimulus: fullscreenVideoHTML("training-introduction-video", "video/RobotQuiParle_loop.mp4"),
   choices: "NO_KEYS",
 
   on_load: function() {
@@ -167,7 +158,6 @@ const training_introduction = {
     const audio = new Audio("audio/TrainingExplication.wav");
 
     video.loop = true;
-
     video.play();
     audio.play();
 
@@ -180,8 +170,7 @@ const training_introduction = {
 
 timeline.push(training_introduction);
 
-// Variabili e costanti del training.
-
+// ---------- Stimoli training ----------
 const training_stimuli = [
   {
     phrase_audio: "audio/Phrase1_False.wav",
@@ -215,43 +204,28 @@ let firstResponseKey = null;
 let firstResponsePhase = null;
 let currentBehaviorFeedback = null;
 
-// Training: frase.
-
+// ---------- Pause ----------
 const pausa_2s = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: "",           // niente da mostrare
-  choices: "NO_KEYS",     // nessuna risposta possibile
-  trial_duration: 2000    // 2000 ms = 2 secondi
+  stimulus: "",
+  choices: "NO_KEYS",
+  trial_duration: 2000
 };
 
 const pausa_1s = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: "",           // niente da mostrare
-  choices: "NO_KEYS",     // nessuna risposta possibile
-  trial_duration: 1000    // 1000 ms = 1 secondo
+  stimulus: "",
+  choices: "NO_KEYS",
+  trial_duration: 1000
 };
 
 timeline.push(pausa_2s);
 
+// ---------- Training: phrase ----------
 function makePhraseTrial(cfg) {
   return {
     type: jsPsychHtmlKeyboardResponse,
-
-    stimulus: `
-      <div style="
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #549FFF;
-      ">
-        <video id="phrase-video" style="max-width: 100vw; max-height: 100vh;">
-          <source src="${cfg.phrase_video}" type="video/mp4">
-        </video>
-      </div>
-    `,
-
+    stimulus: fullscreenVideoHTML("phrase-video", cfg.phrase_video),
     choices: "NO_KEYS",
 
     on_load: function() {
@@ -299,28 +273,11 @@ function makePhraseTrial(cfg) {
   };
 }
 
-// Training: risposta.
-
+// ---------- Training: wait ----------
 function makeWaitTrial() {
   return {
     type: jsPsychHtmlKeyboardResponse,
-
-    stimulus: `
-  <div style="
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #549FFF;
-  ">
-    <video id="wait-video" style="max-width: 100vw; max-height: 100vh;">
-      <source src="video/RobotNeParlePas.mp4" type="video/mp4">
-    </video>
-  </div>
-`,
+    stimulus: fullscreenVideoHTML("wait-video", "video/RobotNeParlePas.mp4"),
     choices: "NO_KEYS",
     trial_duration: 4000,
 
@@ -360,8 +317,7 @@ function makeWaitTrial() {
   };
 }
 
-// Training: feedback sul comportamento.
-
+// ---------- Training: feedback comportamento ----------
 const computeBehaviorFeedback = {
   type: jsPsychCallFunction,
   func: function() {
@@ -382,24 +338,14 @@ function makeBehaviorFeedbackTrial() {
     stimulus: function() {
       let videoSrc;
       if (currentBehaviorFeedback === 1) {
-        videoSrc = "video/RobotQuiParle_loop.mp4";      // risposta troppo presto → t_vid_loop
+        videoSrc = "video/RobotQuiParle_loop.mp4";
       } else if (currentBehaviorFeedback === 2) {
-        videoSrc = "video/FeedbackOkRobot.mp4";          // risposta nel momento giusto
+        videoSrc = "video/FeedbackOkRobot.mp4";
       } else {
-        videoSrc = "video/FeedbackNotOkRobot.mp4";       // nessuna risposta
+        videoSrc = "video/FeedbackNotOkRobot.mp4";
       }
 
-      return `
-        <div style="
-          width: 100vw; height: 100vh;
-          display: flex; justify-content: center; align-items: center;
-          background: #549FFF;
-        ">
-          <video id="behavior-feedback-video" style="max-width: 100vw; max-height: 100vh;">
-            <source src="${videoSrc}" type="video/mp4">
-          </video>
-        </div>
-      `;
+      return fullscreenVideoHTML("behavior-feedback-video", videoSrc);
     },
 
     choices: "NO_KEYS",
@@ -432,27 +378,11 @@ function makeBehaviorFeedbackTrial() {
   };
 }
 
-// Training: feedback sul contenuto della frase.
-
+// ---------- Training: feedback contenuto ----------
 function makeContentFeedbackTrial(cfg) {
   return {
     type: jsPsychHtmlKeyboardResponse,
-
-    stimulus: `
-      <div style="
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #549FFF;
-      ">
-        <video id="content-feedback-video" style="max-width: 100vw; max-height: 100vh;">
-          <source src="${cfg.content_feedback_video}" type="video/mp4">
-        </video>
-      </div>
-    `,
-
+    stimulus: fullscreenVideoHTML("content-feedback-video", cfg.content_feedback_video),
     choices: "NO_KEYS",
 
     on_load: function() {
@@ -489,8 +419,7 @@ for (let i = 0; i < training_stimuli.length; i++) {
   addTrainingTrialBlock(timeline, training_stimuli[i]);
 }
 
-// Video di fine training.
-
+// ---------- Fine training ----------
 const training_end = {
   type: jsPsychHtmlKeyboardResponse,
 
@@ -500,20 +429,7 @@ const training_end = {
       ? "video/TrainingEndVideo.mp4"
       : "video/TrainingEndVideo_old.mp4";
 
-    return `
-      <div style="
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #549FFF;
-      ">
-        <video id="training-end-video" style="max-width: 100vw; max-height: 100vh;">
-          <source src="${videoSrc}" type="video/mp4">
-        </video>
-      </div>
-    `;
+    return fullscreenVideoHTML("training-end-video", videoSrc);
   },
 
   choices: "NO_KEYS",
@@ -542,6 +458,7 @@ const training_end = {
 
 timeline.push(training_end);
 
+// ---------- Schermata finale ----------
 const finish_screen = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
@@ -554,4 +471,5 @@ const finish_screen = {
 
 timeline.push(finish_screen);
 
+// ---------- Run ----------
 jsPsych.run(timeline);
