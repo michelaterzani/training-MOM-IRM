@@ -97,18 +97,6 @@ const intro_screen = {
   choices: [" "]
 };
 
-// ---------- Fullscreen ----------
-timeline.push({
-  type: jsPsychFullscreen,
-  fullscreen_mode: true,
-  message: `
-    <div class="mmo-form">
-      <p>L'expérience va passer en plein écran.</p>
-    </div>
-  `,
-  button_label: "Continuer"
-});
-
 timeline.push(intro_screen);
 
 // ---------- Vidéo explication ----------
